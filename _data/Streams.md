@@ -1,6 +1,8 @@
 # New Methods inside the Streams API
 
 ## Stream
+What are the news from Java8 to Java9?
+
 ### default Stream<T> dropWhile(Predicate<? super T> predicate)
 
 ```java
