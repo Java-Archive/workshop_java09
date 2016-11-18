@@ -1,6 +1,7 @@
 package org.rapidpm.workshop.java09.jep102;
 
-import java.util.Map;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Copyright (C) 2010 RapidPM
@@ -14,16 +15,24 @@ import java.util.Map;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by RapidPM - Team on 18.11.16.
+ * Created by RapidPM - Team on 19.11.16.
  */
-public class JEP102V001 {
-
+public class JEP102V002 {
   public static void main(String[] args) {
-
     final ProcessBuilder processBuilder = new ProcessBuilder();
-    final Map<String, String> environment = processBuilder.environment();
+    final ProcessBuilder command = processBuilder.command("java", "-version"); // only if installed
+    try {
+      command
+          .inheritIO()
+          .redirectOutput(ProcessBuilder.Redirect.INHERIT)
+          .redirectError(ProcessBuilder.Redirect.INHERIT);
+//          .redirectOutput(ProcessBuilder.Redirect.DISCARD)
+//          .redirectError(ProcessBuilder.Redirect.DISCARD);
 
-    environment.forEach((key, value) -> System.out.println("key / value = " + key + " - " + value));
+      final Process start = command.start();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
   }
-
 }
