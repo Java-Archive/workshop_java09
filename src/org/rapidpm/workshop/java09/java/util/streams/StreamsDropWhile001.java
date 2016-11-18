@@ -1,4 +1,4 @@
-package org.rapidpm.workshop.java09.streams;
+package org.rapidpm.workshop.java09.java.util.streams;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,10 +16,9 @@ import java.util.stream.Stream;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * Created by RapidPM - Team on 17.11.16.
+ * Created by RapidPM - Team on 18.11.16.
  */
-public class StreamsTakeWhile001 {
-
+public class StreamsDropWhile001 {
   public static void main(String[] args) {
     workOn(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9});
     workOn(new Integer[]{9, 8, 7, 6, 5, 4, 3, 2, 1});
@@ -34,18 +33,18 @@ public class StreamsTakeWhile001 {
   private static void workOn(final Integer[] integers) {
     final List<Integer> collect = Stream
         .of(integers)
-        .takeWhile(integer -> integer > 5)
+        .dropWhile(integer -> integer > 5)
         .collect(Collectors.toList());
-    System.out.println("takeWhile.isEmpty() = " + collect.isEmpty());
-    System.out.println("takeWhile = " + collect);
+    System.out.println("dropWhile.isEmpty() = " + collect.isEmpty());
+    System.out.println("dropWhile = " + collect);
   }
   private static void workOnParallel(final Integer[] integers) {
     final List<Integer> collect = Stream
         .of(integers)
         .parallel()
-        .takeWhile(integer -> integer > 5)
+        .dropWhile(integer -> integer > 5)
         .collect(Collectors.toList());
-    System.out.println("takeWhileParallel.isEmpty() = " + collect.isEmpty());
-    System.out.println("takeWhileParallel = " + collect);
+    System.out.println("dropWhileParallel.isEmpty() = " + collect.isEmpty());
+    System.out.println("dropWhileParallel = " + collect);
   }
 }
