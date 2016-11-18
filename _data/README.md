@@ -13,13 +13,36 @@
 
 
 ## core 
-### JEP259 - Stack-Walking API
+### JEP259 - Stack-Walking API -- [web](http://openjdk.java.net/jeps/259)
 
 ## core-jdk.nashorn    
 ### JEP236 - 	Parser API for Nashorn
 
 ## core-lang	  
-### JEP102	- Process API Updates
+### JEP102	- Process API Updates -- [web](http://openjdk.java.net/jeps/102)
+#### ProcessBuilder
+##### public static final Redirect DISCARD
+#### Process
+##### public boolean supportsNormalTermination()
+##### public long getPid()
+##### public CompletableFuture<Process> onExit()
+##### public ProcessHandle toHandle()
+##### public ProcessHandle.Info info()
+##### public Stream<ProcessHandle> children()
+##### public Stream<ProcessHandle> descendants()
+### ProcessHandle
+
+### Process
+#### public boolean supportsNormalTermination()
+#### public long getPid()
+#### public CompletableFuture<Process> onExit()
+#### public ProcessHandle toHandle()
+#### public ProcessHandle.Info info()
+#### public Stream<ProcessHandle> children()
+#### public Stream<ProcessHandle> descendants()
+
+
+
 ### JEP193	- Variable Handles
 ### JEP227	- Unicode 7.0
 ### JEP254	- Compact Strings - Newsletter von Heinz
