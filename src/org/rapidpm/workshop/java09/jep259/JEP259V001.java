@@ -1,7 +1,6 @@
 package org.rapidpm.workshop.java09.jep259;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 
 /**
  * Copyright (C) 2010 RapidPM
@@ -23,15 +22,15 @@ public class JEP259V001 {
     //StackWalker.Option.SHOW_REFLECT_FRAMES
     StackWalker.getInstance().forEach(System.out::println);
 
-    new Holder001(new Holder001(new Holder001(null) )).doWork();
+    new Holder(new Holder(new Holder(null) )).doWork();
     new Holder002(new Holder002(new Holder002(null) )).doWork();
 
   }
 
-  public static class Holder001 {
-    private Holder001 holder;
+  public static class Holder {
+    private Holder holder;
 
-    public Holder001(final Holder001 holder) {
+    public Holder(final Holder holder) {
       this.holder = holder;
     }
     public void doWork() {
