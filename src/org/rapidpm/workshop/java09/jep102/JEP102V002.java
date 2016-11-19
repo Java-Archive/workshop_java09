@@ -1,6 +1,5 @@
 package org.rapidpm.workshop.java09.jep102;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
