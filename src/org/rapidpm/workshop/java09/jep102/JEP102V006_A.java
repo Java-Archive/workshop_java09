@@ -1,9 +1,7 @@
 package org.rapidpm.workshop.java09.jep102;
 
-import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -32,7 +30,7 @@ public class JEP102V006_A {
 
 
   public static void main(String[] args) {
-        final CompletableFuture<Optional<Process>> commandJConsole = CompletableFuture
+    final CompletableFuture<Optional<Process>> commandJConsole = CompletableFuture
         .supplyAsync(commandSupplierFunction.apply("jconsole"))
         .handleAsync(JEP102V006.START_PROCESS);
 
@@ -40,7 +38,7 @@ public class JEP102V006_A {
         .supplyAsync(commandSupplierFunction.apply("jmc"))
         .handleAsync(JEP102V006.START_PROCESS);
 
-        commandJConsole
+    commandJConsole
         .thenCombineAsync(commandJMC, (jconsoleOpt, jmcOpt) -> {
           System.out.println("both proc. are started? " + jconsoleOpt.isPresent() + " - " + jmcOpt.isPresent());
           final CompletableFuture<Process> jconsoleProcess = jconsoleOpt.get().onExit();

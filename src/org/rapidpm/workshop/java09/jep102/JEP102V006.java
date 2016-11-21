@@ -43,31 +43,34 @@ public class JEP102V006 {
       .redirectError(ProcessBuilder.Redirect.INHERIT);
 
 
-  public static final Function<String, CompletableFuture<Optional<Process>>> CREATE_AND_START_PROCESS = command -> CompletableFuture
-      .supplyAsync(COMMAND_SUPPLIER_FUNCTION.apply(command))
-      .handleAsync(START_PROCESS);
+  public static final Function<String, CompletableFuture<Optional<Process>>> CREATE_AND_START_PROCESS = command
+      -> CompletableFuture
+          .supplyAsync(COMMAND_SUPPLIER_FUNCTION.apply(command))
+          .handleAsync(START_PROCESS);
 
+  //@formatter:off
   @FunctionalInterface
   public interface JoinProcesses extends BiFunction<CompletableFuture<Optional<Process>>,
-      CompletableFuture<Optional<Process>>,
-      CompletableFuture<Optional<Process>>> {
+                                                    CompletableFuture<Optional<Process>>,
+                                                    CompletableFuture<Optional<Process>>> {
 
     BiFunction<CompletableFuture<Process>,
-        CompletableFuture<Process>,
-        BiFunction<Process,
-            Process,
-            Supplier<ProcessBuilder>>> processResultBiFunction();
-
+               CompletableFuture<Process>,
+               BiFunction<Process,
+                          Process,
+                          Supplier<ProcessBuilder>>> processResultBiFunction();
+    //@formatter:on
     @Override
     default CompletableFuture<Optional<Process>> apply(CompletableFuture<Optional<Process>> procOptA,
                                                        CompletableFuture<Optional<Process>> procOptB) {
       // here more specific exception handlimg or default behavior
-      //System.out.println("both proc. are started? " + procOptA.isPresent() + " - " + procOptB.isPresent());
+      // System.out.println("both proc. are started? " + procOptA.isPresent() + " - " + procOptB.isPresent());
       final CompletableFuture<Process> procA = procOptA.thenComposeAsync(p -> p.get().onExit());
       final CompletableFuture<Process> procB = procOptB.thenComposeAsync(p -> p.get().onExit());
       return procA
           .thenCombineAsync(procB, processResultBiFunction().apply(procA, procB))
-          .handleAsync((processBuilderSupplier, throwable) -> JEP102V006.START_PROCESS.apply(processBuilderSupplier.get(), throwable));
+          .handleAsync((processBuilderSupplier, throwable)
+              -> JEP102V006.START_PROCESS.apply(processBuilderSupplier.get(), throwable));
     }
   }
 

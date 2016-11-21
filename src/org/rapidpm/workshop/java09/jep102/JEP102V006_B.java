@@ -19,12 +19,13 @@ import java.util.function.Supplier;
  * Created by RapidPM - Team on 19.11.16.
  */
 public class JEP102V006_B {
-
+  //@formatter:off
   private static final BiFunction<CompletableFuture<Process>,
                                   CompletableFuture<Process>,
                                   BiFunction<Process,
                                              Process,
                                              Supplier<ProcessBuilder>>> processResults
+   //@formatter:on
       = (procCFA, procCFB) -> {
     final Process procA = procCFA.join();
     final Process procB = procCFB.join();
