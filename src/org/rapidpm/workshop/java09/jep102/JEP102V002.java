@@ -29,7 +29,9 @@ public class JEP102V002 {
 //          .redirectError(ProcessBuilder.Redirect.DISCARD);
 
       final Process start = command.start();
-    } catch (IOException e) {
+      final int waitFor = start.waitFor();
+
+    } catch (IOException | InterruptedException e) {
       e.printStackTrace();
     }
 

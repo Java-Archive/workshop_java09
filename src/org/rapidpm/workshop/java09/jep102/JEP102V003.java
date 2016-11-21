@@ -1,9 +1,9 @@
 package org.rapidpm.workshop.java09.jep102;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
+
+import static java.lang.System.out;
 
 /**
  * Copyright (C) 2010 RapidPM
@@ -20,43 +20,36 @@ import java.util.concurrent.CompletableFuture;
  * Created by RapidPM - Team on 19.11.16.
  */
 public class JEP102V003 {
-
   public static void main(String[] args) {
-    final ProcessBuilder processBuilder = new ProcessBuilder();
-    final ProcessBuilder command = processBuilder.command("java" , "-version"); // only if installed
-    try {
-      command
-          .directory(new File("workshop_java09/_tmp/jep102/v003"))
-          .inheritIO()
-          .redirectOutput(ProcessBuilder.Redirect.INHERIT)
-          .redirectError(ProcessBuilder.Redirect.INHERIT);
+    final ProcessHandle current = ProcessHandle.current();
+    final long currentPid = current.getPid();
+    out.println("pid = " + currentPid);
 
-      System.out.println("directory.toPath() = " + command.directory().toPath());
+    final Optional<ProcessHandle> parent = ProcessHandle.current().parent();
+    parent.ifPresent(f -> out.println("f.getPid() = " + f.getPid()));
 
 
-      final Process start = command.start();
+    final Stream<ProcessHandle> processHandleStream = ProcessHandle.allProcesses();
 
-      final long pid = start.getPid();
-      System.out.println("pid = " + pid);
+    processHandleStream
+        .limit(4)
+        .forEach( p -> {
+          final long pid = p.getPid();
+          out.println("pid = " + pid);
+        }
+    );
+
+    final ProcessHandle processOne = ProcessHandle.of(1).get();
+    processOne
+        .children()
+        .limit(4)
+        .forEach(p -> out.println("p = " + p.info() ));
 
 
-      final ProcessHandle.Info info = start.info();
-      final Optional<String[]> arguments = info.arguments();
-
-      //startInstant
-      //totalCpuDuration
-      //user
-
-      //wait until exit is done
-      final CompletableFuture<Process> onExit = start.onExit();
-      onExit.whenComplete((process, throwable) -> {
-        final int exitValue = process.exitValue();
-        System.out.println("exitValue = " + exitValue);
-      });
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
+    ProcessHandle
+        .current()
+        .descendants()
+        .forEach(p -> out.println("p = " + p.info() ));
 
   }
 }
