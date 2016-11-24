@@ -34,7 +34,7 @@ public class JEP266v005 {
 
 
       IntStream.range(1, 1_000_000)
-              .forEach(i -> pup.submit(i));
+              .forEach(pup::submit);
 
       System.out.println("published World");
       Thread.sleep(1000 + pup.estimateMaximumLag());

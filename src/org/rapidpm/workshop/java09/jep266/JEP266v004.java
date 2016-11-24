@@ -1,7 +1,6 @@
 package org.rapidpm.workshop.java09.jep266;
 
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Flow;
@@ -17,7 +16,7 @@ public class JEP266v004 {
   public static void main(String[] args) throws InterruptedException {
 
     ExecutorService executor = Executors.newFixedThreadPool(10);
-    try (SubmissionPublisher pup = new SubmissionPublisher<Integer>(executor,10)) {
+    try (SubmissionPublisher pup = new SubmissionPublisher<Integer>(executor, 10)) {
 
       TestProcessor processor = new TestProcessor();
       pup.subscribe(processor);
@@ -27,16 +26,14 @@ public class JEP266v004 {
       processor.consume(System.out::println);
 
       IntStream.range(1, 10)
-              .forEach(i -> pup.submit(i));
+          .forEach(pup::submit);
 
       System.out.println("published World");
       Thread.sleep(1000 + pup.estimateMaximumLag());
-    }
-    finally {
+    } finally {
       executor.shutdown();
     }
   }
-
 
 
   public static class TestProcessor extends SubmissionPublisher<Integer> implements Flow.Processor<Integer, Integer> {
