@@ -1,6 +1,9 @@
 package org.rapidpm.workshop.java09.jep264.v001.app;
 
 
+import java.time.LocalDateTime;
+import java.util.function.Supplier;
+
 /**
  * Copyright (C) 2010 RapidPM
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -31,7 +34,28 @@ public class JEP264V001 {
 
 
 
+    //log something
+    if(logger.isLoggable(System.Logger.Level.DEBUG))
+      logger.log(System.Logger.Level.DEBUG, "here " + "are " + "expensive " + "ops " + methodToShowThePrice());
 
+    // Logger not working on this level
+    if(logger.isLoggable(System.Logger.Level.TRACE))
+      logger.log(System.Logger.Level.TRACE, "here " + "are " + "expensive " + "ops " + methodToShowThePrice());
+
+
+
+
+    logger.log(System.Logger.Level.TRACE, ()-> "here " + "are " + "expensive " + "ops " + methodToShowThePrice());
+    logger.log(System.Logger.Level.TRACE, logMessage);
+
+  }
+
+
+  private static Supplier<String> logMessage = ()-> "here " + "are " + "expensive " + "ops " + methodToShowThePrice();
+
+  private static String methodToShowThePrice() {
+    System.out.println(" will create instance now.....");
+    return LocalDateTime.now().toString();
   }
 
 

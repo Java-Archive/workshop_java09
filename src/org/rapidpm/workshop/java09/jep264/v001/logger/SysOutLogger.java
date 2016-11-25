@@ -28,13 +28,20 @@ public class SysOutLogger implements System.Logger {
   @Override // this conf is useless ;-)
   public boolean isLoggable(Level level) {
     switch (level) {
-      case OFF: return false;
-      case TRACE: return false;
-      case DEBUG: return true;
-      case INFO: return true;
-      case WARNING: return false;
-      case ERROR: return false;
-      case ALL: return false;
+      case OFF:
+        return false;
+      case TRACE:
+        return false;
+      case DEBUG:
+        return true;
+      case INFO:
+        return true;
+      case WARNING:
+        return false;
+      case ERROR:
+        return false;
+      case ALL:
+        return false;
       default:
         return true;
     }
@@ -47,6 +54,6 @@ public class SysOutLogger implements System.Logger {
 
   @Override
   public void log(Level level, ResourceBundle bundle, String format, Object... params) {
-    System.out.printf("SysOutLogger: %s: \"%s\"%n", level, format(format, params));
+    System.out.printf("SysOutLogger:  %s: \"%s\"%n", level, format(format, params));
   }
 }
