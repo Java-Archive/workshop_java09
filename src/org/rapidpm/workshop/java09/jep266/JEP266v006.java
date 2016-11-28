@@ -3,6 +3,7 @@ package org.rapidpm.workshop.java09.jep266;
 
 import java.util.concurrent.Flow;
 import java.util.concurrent.SubmissionPublisher;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 /**
@@ -19,41 +20,69 @@ import java.util.stream.IntStream;
  *
  * Created by RapidPM - Team on 23.11.16.
  */
-public class JEP266v003 {
+public class JEP266v006 {
 
 
   public static void main(String[] args) throws InterruptedException {
 
+
     try (SubmissionPublisher pup = new SubmissionPublisher<Integer>()) {
 
-      IntToStringProcessor processor = new IntToStringProcessor();
+      TestProcessor processor = new TestProcessor(0);
+      TestProcessor processor2 = new TestProcessor(1);
       pup.subscribe(processor);
-      processor.subscribe(new TestSubscriber("Sub1"));
+      pup.subscribe(processor2);
 
-      IntStream.range(1, 10)
-              .forEach(pup::submit);
+      TestSubscriber testAll = new TestSubscriber("testAll");
+      TestSubscriber testEven = new TestSubscriber("testEven");
+      TestSubscriber testOdd = new TestSubscriber("testOdd");
 
-      System.out.println("published all the numbers");
-      Thread.sleep(100 + pup.estimateMaximumLag());
+      processor.subscribe(testAll);
+      processor2.subscribe(testAll);
+
+      processor.subscribe(testEven);
+
+      processor2.consume(integer -> {
+        try {
+          Thread.sleep(1000);
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+
+      });
+
+
+      IntStream.range(1, 10000)
+              .forEach(i -> pup.offer(i, 10, TimeUnit.MILLISECONDS, (o, o2) -> {
+                System.out.println(String.format("Subscirber %s rejected %s", o, o2));
+                return false;
+              }));
+
+      System.out.println("published World");
+      Thread.sleep(1000 + pup.estimateMaximumLag());
     }
   }
 
 
-
-  public static class IntToStringProcessor extends SubmissionPublisher<String> implements Flow.Processor<Integer, String> {
+  public static class TestProcessor extends SubmissionPublisher<Integer> implements Flow.Processor<Integer, Integer> {
 
     private Flow.Subscription subscription;
+    private final int mod;
+
+    public TestProcessor(int mod) {
+      this.mod = mod;
+    }
 
     @Override
     public void onSubscribe(Flow.Subscription subscription) {
       this.subscription = subscription;
-      this.subscription.request(1);
+      this.subscription.request(10);
     }
 
     @Override
     public void onNext(Integer item) {
-      submit(String.valueOf(item));
-      subscription.request(1);
+      subscription.request(10);
+      if (item % 2 == mod) submit(item);
     }
 
     @Override
@@ -67,7 +96,8 @@ public class JEP266v003 {
     }
   }
 
-  public static class TestSubscriber implements Flow.Subscriber<String> {
+  public static class TestSubscriber implements Flow.Subscriber<Integer> {
+
 
     private final String name;
 
@@ -81,9 +111,10 @@ public class JEP266v003 {
     }
 
     @Override
-    public void onNext(String item) {
+    public void onNext(Integer item) {
+
       System.out.println(String.format("%s says: Hello %s", name, item));
-      System.out.flush();
+      //System.out.flush();
     }
 
     @Override
@@ -96,5 +127,6 @@ public class JEP266v003 {
       // nothing to do here
     }
   }
+
 
 }
